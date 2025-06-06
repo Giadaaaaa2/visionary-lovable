@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Mappa con Barra di Ricerca</title>
+    <title>Mappa con Barra di Ricerca e MyMaps</title>
     <style>
       #map {
-        height: 500px;
+        height: 100vh;
         width: 100%;
       }
       #search-input {
@@ -32,9 +32,9 @@
           zoom: 12,
         });
 
+        // 🔍 Barra di ricerca
         const input = document.getElementById("search-input");
         const searchBox = new google.maps.places.SearchBox(input);
-
         map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
 
         map.addListener("bounds_changed", () => {
@@ -42,17 +42,14 @@
         });
 
         let markers = [];
-
         searchBox.addListener("places_changed", () => {
           const places = searchBox.getPlaces();
-
           if (places.length === 0) return;
 
           markers.forEach((marker) => marker.setMap(null));
           markers = [];
 
           const bounds = new google.maps.LatLngBounds();
-
           places.forEach((place) => {
             if (!place.geometry || !place.geometry.location) return;
 
@@ -72,6 +69,12 @@
           });
 
           map.fitBounds(bounds);
+        });
+
+        // 📍 Layer MyMaps via KML
+        const kmlLayer = new google.maps.KmlLayer({
+          url: "https://drive.google.com/uc?export=download&id=1rAh5gKQNRTDvx3oBCkXBJeqrZfusWM7H",
+          map: map,
         });
       }
     </script>
